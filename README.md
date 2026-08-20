@@ -1,2 +1,0 @@
-# beyblade
-beyblade x
