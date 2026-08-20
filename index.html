@@ -9,7 +9,7 @@
                maximum-scale=1.0,
                user-scalable=no">
 
-<title>Spin Clash X</title>
+<title>Beyblade X — Combo Randomizer</title>
 
 <style>
 
@@ -20,24 +20,26 @@
 
 html,body{
   margin:0;
-  width:100%;
   min-height:100%;
-  overflow:hidden;
-  font-family:system-ui,sans-serif;
-  background:
-    radial-gradient(circle at top,#263b62,#070b14 65%);
+  font-family:system-ui,-apple-system,sans-serif;
   color:white;
 }
 
 body{
+  min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
+  overflow-x:hidden;
+
+  background:
+    radial-gradient(circle at 50% 0%,#334d7a 0%,transparent 40%),
+    linear-gradient(145deg,#070b13,#151c2d 55%,#080b12);
 }
 
 .game{
-  width:min(950px,100vw);
-  padding:10px;
+  width:min(950px,94vw);
+  padding:22px 0 35px;
   text-align:center;
 }
 
@@ -45,16 +47,19 @@ h1{
   margin:0;
 
   font-size:
-    clamp(28px,7vw,55px);
+    clamp(32px,8vw,62px);
+
+  line-height:1;
 
   font-weight:1000;
+  letter-spacing:-2px;
 
   background:
     linear-gradient(
       90deg,
-      #55d9ff,
-      white,
-      #ff5353
+      #39c9ff,
+      #fff,
+      #ff4855
     );
 
   color:transparent;
@@ -62,362 +67,340 @@ h1{
 }
 
 .subtitle{
-  margin:0 0 8px;
+  margin:8px 0 22px;
+
+  font-size:13px;
   font-weight:900;
-  letter-spacing:3px;
+
+  letter-spacing:4px;
+
+  opacity:.75;
 }
 
-.stats{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:8px;
-}
+/* ================================
+   RANDOMIZER
+================================ */
 
-.stat{
-  padding:7px 14px;
-  border-radius:999px;
-  background:#ffffff12;
-  border:1px solid #ffffff30;
-  font-weight:900;
-}
-
-#arena{
+.randomizer{
   position:relative;
 
+  padding:20px;
+
+  border-radius:28px;
+
+  border:1px solid #ffffff2b;
+
+  background:#ffffff0b;
+
+  box-shadow:
+    0 20px 60px #0008,
+    inset 0 0 40px #ffffff06;
+
+  backdrop-filter:blur(10px);
+}
+
+/* ================================
+   COMBO DISPLAY
+================================ */
+
+.combo{
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:0;
+
+  margin:8px auto 20px;
+
+  width:min(430px,100%);
+}
+
+.part{
   width:100%;
 
-  height:min(70vh,650px);
+  min-height:105px;
 
-  min-height:430px;
+  display:flex;
 
-  overflow:hidden;
+  align-items:center;
 
-  border-radius:30px;
+  justify-content:center;
 
-  border:3px solid #ffffff44;
+  position:relative;
+
+  padding:15px 20px;
+
+  border:1px solid #ffffff25;
 
   background:
-    radial-gradient(
-      circle at center,
-      #273958,
-      #111a2b 55%,
-      #070b13
+    linear-gradient(
+      135deg,
+      #ffffff10,
+      #ffffff04
     );
 
   box-shadow:
-    0 0 40px #000b,
-    inset 0 0 60px #000b;
+    inset 0 0 20px #0005;
 }
 
-/* =========================
-   ARENA RAIL
-========================= */
+.part:first-child{
+  border-radius:20px 20px 8px 8px;
+}
 
-.rail{
+.part:last-child{
+  border-radius:8px 8px 20px 20px;
+}
+
+.part + .part{
+  border-top:0;
+}
+
+.partLabel{
   position:absolute;
 
-  left:50%;
-  top:50%;
+  left:14px;
+  top:8px;
 
-  width:94%;
-  height:20px;
+  font-size:10px;
 
-  transform:
-    translate(-50%,-50%)
-    rotate(-7deg);
+  font-weight:1000;
 
-  border-radius:999px;
+  letter-spacing:2px;
+
+  opacity:.6;
+}
+
+.partName{
+  font-size:
+    clamp(20px,5vw,30px);
+
+  font-weight:1000;
+
+  text-transform:uppercase;
+}
+
+.partSymbol{
+  font-size:38px;
+
+  margin-right:13px;
+}
+
+/* ================================
+   CENTER CONNECTORS
+================================ */
+
+.connector{
+  width:24px;
+  height:16px;
 
   background:
     linear-gradient(
       90deg,
-      transparent,
-      #55d9ff,
-      white,
-      #ff5555,
-      transparent
+      #39c9ff,
+      #ffffff,
+      #ff4855
     );
 
-  box-shadow:
-    0 0 15px #55d9ff88,
-    0 0 30px #ff555555;
-
-  opacity:.7;
-}
-
-.rail2{
-  transform:
-    translate(-50%,-50%)
-    rotate(83deg);
-
-  opacity:.18;
-}
-
-/* =========================
-   CENTER
-========================= */
-
-.center{
-  position:absolute;
-
-  left:50%;
-  top:50%;
-
-  width:130px;
-  height:130px;
-
-  transform:translate(-50%,-50%);
-
-  border-radius:50%;
-
-  border:2px solid #ffffff33;
+  border-radius:0 0 8px 8px;
 
   box-shadow:
-    inset 0 0 30px #0009,
-    0 0 20px #ffffff12;
-}
-
-/* =========================
-   TOPS
-========================= */
-
-.top{
-  position:absolute;
-
-  width:76px;
-  height:76px;
-
-  border-radius:50%;
-
-  border:5px solid white;
-
-  transform:
-    translate(-50%,-50%);
-
-  box-shadow:
-    0 0 15px #fff7,
-    inset 0 0 12px #0008;
+    0 0 15px #ffffff66;
 
   z-index:5;
 }
 
-.top::before{
-  content:"";
+/* ================================
+   SPIN PREVIEW
+================================ */
 
-  position:absolute;
+.previewArea{
+  height:270px;
 
-  left:50%;
-  top:50%;
-
-  width:22px;
-  height:22px;
-
-  transform:translate(-50%,-50%);
-
-  border-radius:50%;
-
-  background:#111;
-
-  border:4px solid white;
-
-  box-shadow:
-    0 0 10px #fff;
-}
-
-.top::after{
-  content:"";
-
-  position:absolute;
-
-  inset:7px;
-
-  border-radius:50%;
-
-  border:
-    3px dashed #ffffffaa;
-
-  animation:
-    spin .15s linear infinite;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
-
-#playerTop{
-  background:
-    conic-gradient(
-      #45d9ff,
-      #1260ff,
-      #ffffff,
-      #45d9ff
-    );
-}
-
-#cpuTop{
-  background:
-    conic-gradient(
-      #ff4d55,
-      #9c1020,
-      #ffffff,
-      #ff4d55
-    );
-}
-
-/* =========================
-   EFFECTS
-========================= */
-
-.hit{
-  position:absolute;
-
-  width:80px;
-  height:80px;
-
-  border-radius:50%;
-
-  border:5px solid white;
-
-  pointer-events:none;
-
-  animation:
-    explosion .45s ease-out forwards;
-
-  z-index:10;
-}
-
-@keyframes explosion{
-
-  from{
-    opacity:1;
-    transform:scale(.2);
-  }
-
-  to{
-    opacity:0;
-    transform:scale(2.5);
-  }
-}
-
-.spark{
-  position:absolute;
-
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:white;
-
-  pointer-events:none;
-
-  animation:
-    spark .5s ease-out forwards;
-}
-
-@keyframes spark{
-
-  from{
-    opacity:1;
-    transform:translate(0,0) scale(1);
-  }
-
-  to{
-    opacity:0;
-    transform:
-      translate(
-        var(--x),
-        var(--y)
-      )
-      scale(.1);
-  }
-}
-
-/* =========================
-   LAUNCH SCREEN
-========================= */
-
-#overlay{
-  position:absolute;
-
-  inset:0;
+  margin:15px auto;
 
   display:flex;
 
   justify-content:center;
   align-items:center;
 
-  background:#050812dd;
+  position:relative;
 
-  z-index:50;
+  overflow:hidden;
+
+  border-radius:22px;
+
+  background:
+    radial-gradient(
+      circle,
+      #334c72,
+      #111827 50%,
+      #080b12
+    );
+
+  border:1px solid #ffffff22;
 }
 
-.panel{
-  width:min(500px,90%);
+.previewArea::before{
+  content:"";
 
-  padding:25px;
+  position:absolute;
 
-  border-radius:25px;
+  width:210px;
+  height:210px;
 
-  background:#ffffff0d;
+  border-radius:50%;
 
-  border:1px solid #ffffff30;
-
-  backdrop-filter:blur(10px);
+  border:2px solid #ffffff18;
 
   box-shadow:
-    0 20px 50px #0009;
+    0 0 50px #39c9ff15,
+    inset 0 0 30px #0008;
 }
 
-.panel h2{
-  margin:0 0 8px;
+.previewTop{
+  position:relative;
 
-  font-size:34px;
+  width:145px;
+  height:145px;
+
+  border-radius:50%;
+
+  background:
+    conic-gradient(
+      #39c9ff,
+      #1265ff,
+      white,
+      #ff4855,
+      #8c1220,
+      white,
+      #39c9ff
+    );
+
+  border:7px solid #ddd;
+
+  box-shadow:
+    0 0 20px #ffffff77,
+    0 0 50px #39c9ff33,
+    inset 0 0 18px #0009;
+
+  animation:
+    slowSpin 2s linear infinite;
 }
 
-.panel p{
-  line-height:1.6;
+.previewTop::before{
+  content:"";
+
+  position:absolute;
+
+  width:48px;
+  height:48px;
+
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #eee,
+      #555
+    );
+
+  border:5px solid #111;
+
+  box-shadow:
+    0 0 12px #fff;
 }
 
-.mainButton{
+.previewTop::after{
+  content:"";
+
+  position:absolute;
+
+  inset:12px;
+
+  border-radius:50%;
+
+  border:
+    3px dashed #ffffffbb;
+}
+
+@keyframes slowSpin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+.previewTop.randomizing{
+  animation:
+    fastSpin .12s linear infinite;
+}
+
+@keyframes fastSpin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* ================================
+   BUTTON
+================================ */
+
+.randomButton{
+  width:100%;
+
+  max-width:500px;
+
+  min-height:62px;
+
   border:0;
 
-  padding:14px 30px;
+  border-radius:18px;
 
-  border-radius:999px;
+  cursor:pointer;
+
+  color:white;
+
+  font-size:20px;
+
+  font-weight:1000;
+
+  letter-spacing:1px;
 
   background:
     linear-gradient(
       90deg,
       #168cff,
-      #ef3947
+      #31c9ff 48%,
+      #ff3548
     );
 
-  color:white;
-
-  font-size:18px;
-
-  font-weight:1000;
-
-  cursor:pointer;
-
   box-shadow:
-    0 0 25px #168cff55;
+    0 8px 30px #168cff33;
+
+  transition:
+    transform .12s,
+    filter .12s;
 }
 
-.hidden{
-  display:none!important;
+.randomButton:hover{
+  filter:brightness(1.15);
 }
 
-/* =========================
-   CONTROLS
-========================= */
+.randomButton:active{
+  transform:scale(.97);
+}
 
-.controls{
+/* ================================
+   STATS
+================================ */
+
+.stats{
   display:grid;
 
   grid-template-columns:
@@ -425,98 +408,148 @@ h1{
 
   gap:8px;
 
-  width:min(500px,100%);
+  margin:18px auto;
 
-  margin:10px auto 0;
+  max-width:650px;
 }
 
-.control{
-  min-height:50px;
-
-  border:0;
+.stat{
+  padding:13px 8px;
 
   border-radius:15px;
 
-  background:#ffffff15;
+  background:#ffffff0c;
 
-  border:1px solid #ffffff30;
+  border:1px solid #ffffff1f;
+}
 
-  color:white;
+.statTitle{
+  font-size:10px;
 
   font-weight:1000;
 
-  font-size:15px;
+  letter-spacing:2px;
+
+  opacity:.55;
+}
+
+.statValue{
+  margin-top:4px;
+
+  font-size:22px;
+
+  font-weight:1000;
+}
+
+/* ================================
+   COLLECTION
+================================ */
+
+.collection{
+  margin-top:20px;
+
+  text-align:left;
+}
+
+.collectionHeader{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:10px;
+}
+
+.collectionHeader h2{
+  margin:0;
+
+  font-size:20px;
+}
+
+.clearButton{
+  border:0;
+
+  padding:7px 12px;
+
+  border-radius:999px;
+
+  background:#ffffff12;
+
+  color:white;
+
+  font-weight:800;
 
   cursor:pointer;
 }
 
-.control:active{
-  transform:scale(.94);
-  background:#ffffff30;
+.history{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(180px,1fr));
+
+  gap:8px;
+
+  max-height:240px;
+
+  overflow-y:auto;
 }
 
-#launch{
-  background:
-    linear-gradient(
-      90deg,
-      #168cff,
-      #2cc7ff
-    );
+.historyItem{
+  padding:12px;
+
+  border-radius:14px;
+
+  background:#ffffff09;
+
+  border:1px solid #ffffff18;
+
+  font-size:12px;
+
+  font-weight:800;
 }
 
-#attack{
-  background:
-    linear-gradient(
-      90deg,
-      #e8283e,
-      #ff6a3d
-    );
+.historyItem strong{
+  color:#62d8ff;
 }
 
-#brake{
-  background:
-    linear-gradient(
-      90deg,
-      #4c4c59,
-      #777786
-    );
-}
-
-/* =========================
+/* ================================
    MOBILE
-========================= */
+================================ */
 
 @media(max-width:600px){
 
-  #arena{
-    height:65vh;
-    min-height:390px;
+  .game{
+    width:94vw;
+    padding-top:15px;
   }
 
-  .top{
-    margin-bottom:2px;
+  .randomizer{
+    padding:12px;
+    border-radius:22px;
   }
 
-  .top h1{
-    font-size:34px;
+  .previewArea{
+    height:220px;
   }
 
-  .top .subtitle{
-    font-size:12px;
+  .previewTop{
+    width:125px;
+    height:125px;
   }
 
-  .top{
-    width:58px;
-    height:58px;
+  .stats{
+    grid-template-columns:
+      repeat(3,1fr);
   }
 
-  .controls{
-    gap:6px;
+  .statValue{
+    font-size:18px;
   }
 
-  .control{
-    min-height:54px;
-    font-size:13px;
+  .history{
+    grid-template-columns:
+      repeat(2,1fr);
   }
 
 }
@@ -531,111 +564,196 @@ h1{
 <h1>SPIN CLASH X</h1>
 
 <p class="subtitle">
-HIGH SPEED BATTLE ⚡
+BEYBLADE X COMBO RANDOMIZER
 </p>
+
+
+<div class="randomizer">
+
+<!-- ============================
+     COMBO
+============================= -->
+
+<div class="combo">
+
+  <div class="part">
+
+    <span class="partLabel">
+      BLADE
+    </span>
+
+    <span class="partSymbol">
+      ⚔️
+    </span>
+
+    <span
+      id="bladeName"
+      class="partName"
+    >
+      —
+    </span>
+
+  </div>
+
+
+  <div class="connector"></div>
+
+
+  <div class="part">
+
+    <span class="partLabel">
+      RATCHET
+    </span>
+
+    <span class="partSymbol">
+      ⚙️
+    </span>
+
+    <span
+      id="ratchetName"
+      class="partName"
+    >
+      —
+    </span>
+
+  </div>
+
+
+  <div class="connector"></div>
+
+
+  <div class="part">
+
+    <span class="partLabel">
+      BIT
+    </span>
+
+    <span class="partSymbol">
+      🔻
+    </span>
+
+    <span
+      id="bitName"
+      class="partName"
+    >
+      —
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- ============================
+     PREVIEW
+============================= -->
+
+<div class="previewArea">
+
+  <div
+    id="previewTop"
+    class="previewTop"
+  ></div>
+
+</div>
+
+
+<!-- ============================
+     BUTTON
+============================= -->
+
+<button
+  id="randomButton"
+  class="randomButton"
+>
+  🎲 RANDOMIZE COMBO
+</button>
+
+
+<!-- ============================
+     STATS
+============================= -->
 
 <div class="stats">
 
-<div class="stat">
-YOU: <span id="playerPoints">0</span>
-</div>
+  <div class="stat">
 
-<div class="stat">
-CPU: <span id="cpuPoints">0</span>
-</div>
+    <div class="statTitle">
+      ATTACK
+    </div>
 
-<div class="stat">
-SPEED: <span id="speedText">0</span>
-</div>
+    <div
+      id="attackStat"
+      class="statValue"
+    >
+      —
+    </div>
 
-<div class="stat">
-STAMINA: <span id="staminaText">100</span>%
-</div>
-
-</div>
+  </div>
 
 
-<div id="arena">
+  <div class="stat">
 
-<div class="rail"></div>
-<div class="rail rail2"></div>
+    <div class="statTitle">
+      DEFENSE
+    </div>
 
-<div class="center"></div>
+    <div
+      id="defenseStat"
+      class="statValue"
+    >
+      —
+    </div>
 
-
-<div
-  id="playerTop"
-  class="top"
-></div>
-
-
-<div
-  id="cpuTop"
-  class="top"
-></div>
+  </div>
 
 
-<div id="overlay">
+  <div class="stat">
 
-<div class="panel">
+    <div class="statTitle">
+      STAMINA
+    </div>
 
-<h2>
-⚡ SPIN CLASH X
-</h2>
+    <div
+      id="staminaStat"
+      class="statValue"
+    >
+      —
+    </div>
 
-<p>
-
-Launch your top and battle the CPU!
-
-<br><br>
-
-⚡ <b>LAUNCH</b> to start spinning<br>
-💥 <b>ATTACK</b> to ram the opponent<br>
-🛑 <b>BRAKE</b> to reduce speed
-
-<br><br>
-
-First to <b>3 points</b> wins!
-
-</p>
-
-<button
-  id="startButton"
-  class="mainButton"
->
-START BATTLE
-</button>
-
-</div>
+  </div>
 
 </div>
 
 
+<!-- ============================
+     HISTORY
+============================= -->
+
+<div class="collection">
+
+  <div class="collectionHeader">
+
+    <h2>
+      🎒 Generated Combos
+    </h2>
+
+    <button
+      id="clearButton"
+      class="clearButton"
+    >
+      Clear
+    </button>
+
+  </div>
+
+
+  <div
+    id="history"
+    class="history"
+  ></div>
+
 </div>
-
-
-<div class="controls">
-
-<button
-  id="launch"
-  class="control"
->
-🚀 LAUNCH
-</button>
-
-<button
-  id="attack"
-  class="control"
->
-💥 ATTACK
-</button>
-
-<button
-  id="brake"
-  class="control"
->
-🛑 BRAKE
-</button>
 
 </div>
 
@@ -644,731 +762,569 @@ START BATTLE
 
 <script>
 
-/* =================================
+/* ==================================
+   PART DATABASE
+================================== */
+
+/*
+  These are example/custom part names
+  for the randomizer.
+
+  You can freely replace these with
+  the parts you own.
+*/
+
+
+const blades = [
+
+  {
+    name:"Dran Sword",
+    attack:9,
+    defense:3,
+    stamina:4
+  },
+
+  {
+    name:"Wizard Arrow",
+    attack:3,
+    defense:6,
+    stamina:9
+  },
+
+  {
+    name:"Shark Edge",
+    attack:10,
+    defense:3,
+    stamina:5
+  },
+
+  {
+    name:"Hells Scythe",
+    attack:7,
+    defense:5,
+    stamina:7
+  },
+
+  {
+    name:"Knight Shield",
+    attack:3,
+    defense:10,
+    stamina:6
+  },
+
+  {
+    name:"Leon Claw",
+    attack:8,
+    defense:7,
+    stamina:4
+  },
+
+  {
+    name:"Phoenix Wing",
+    attack:9,
+    defense:6,
+    stamina:7
+  },
+
+  {
+    name:"Rhino Horn",
+    attack:5,
+    defense:9,
+    stamina:5
+  },
+
+  {
+    name:"Cobalt Dragoon",
+    attack:8,
+    defense:5,
+    stamina:8
+  },
+
+  {
+    name:"Silver Wolf",
+    attack:5,
+    defense:6,
+    stamina:9
+  }
+
+];
+
+
+const ratchets = [
+
+  {
+    name:"3-60",
+    attack:7,
+    defense:5,
+    stamina:6
+  },
+
+  {
+    name:"3-80",
+    attack:5,
+    defense:7,
+    stamina:6
+  },
+
+  {
+    name:"4-60",
+    attack:6,
+    defense:6,
+    stamina:6
+  },
+
+  {
+    name:"4-80",
+    attack:4,
+    defense:8,
+    stamina:5
+  },
+
+  {
+    name:"5-60",
+    attack:7,
+    defense:6,
+    stamina:5
+  },
+
+  {
+    name:"5-80",
+    attack:4,
+    defense:9,
+    stamina:4
+  },
+
+  {
+    name:"9-60",
+    attack:8,
+    defense:4,
+    stamina:5
+  },
+
+  {
+    name:"7-70",
+    attack:5,
+    defense:7,
+    stamina:6
+  }
+
+];
+
+
+const bits = [
+
+  {
+    name:"Flat",
+    attack:9,
+    defense:3,
+    stamina:4
+  },
+
+  {
+    name:"Rush",
+    attack:10,
+    defense:2,
+    stamina:3
+  },
+
+  {
+    name:"Point",
+    attack:6,
+    defense:5,
+    stamina:8
+  },
+
+  {
+    name:"Ball",
+    attack:3,
+    defense:8,
+    stamina:9
+  },
+
+  {
+    name:"Needle",
+    attack:2,
+    defense:10,
+    stamina:7
+  },
+
+  {
+    name:"High Needle",
+    attack:2,
+    defense:9,
+    stamina:7
+  },
+
+  {
+    name:"Gear Flat",
+    attack:10,
+    defense:3,
+    stamina:4
+  },
+
+  {
+    name:"Orb",
+    attack:4,
+    defense:6,
+    stamina:9
+  },
+
+  {
+    name:"Taper",
+    attack:7,
+    defense:5,
+    stamina:7
+  },
+
+  {
+    name:"Flat Ball",
+    attack:7,
+    defense:6,
+    stamina:6
+  }
+
+];
+
+
+/* ==================================
    ELEMENTS
-================================= */
+================================== */
 
-const arena =
-document.getElementById("arena");
+const bladeName=
+document.getElementById("bladeName");
 
-const playerTop =
-document.getElementById("playerTop");
+const ratchetName=
+document.getElementById("ratchetName");
 
-const cpuTop =
-document.getElementById("cpuTop");
+const bitName=
+document.getElementById("bitName");
 
-const overlay =
-document.getElementById("overlay");
+const attackStat=
+document.getElementById("attackStat");
 
-const startButton =
-document.getElementById("startButton");
+const defenseStat=
+document.getElementById("defenseStat");
 
-const playerPointsText =
-document.getElementById("playerPoints");
+const staminaStat=
+document.getElementById("staminaStat");
 
-const cpuPointsText =
-document.getElementById("cpuPoints");
+const previewTop=
+document.getElementById("previewTop");
 
-const speedText =
-document.getElementById("speedText");
+const randomButton=
+document.getElementById("randomButton");
 
-const staminaText =
-document.getElementById("staminaText");
+const history=
+document.getElementById("history");
 
-
-/* =================================
-   GAME VARIABLES
-================================= */
-
-let running=false;
-
-let playerPoints=0;
-let cpuPoints=0;
-
-let playerStamina=100;
-let cpuStamina=100;
-
-let playerSpeed=0;
-let cpuSpeed=0;
-
-let playerAngle=0;
-let cpuAngle=Math.PI;
-
-let playerRadius=120;
-let cpuRadius=120;
-
-let playerSpin=0;
-let cpuSpin=0;
-
-let attackCooldown=0;
-
-let animation;
+const clearButton=
+document.getElementById("clearButton");
 
 
-/* =================================
-   HIGH SCORE
-================================= */
+/* ==================================
+   RANDOM FUNCTION
+================================== */
 
-let wins=
-Number(
-  localStorage.getItem("spinClashWins")
-)||0;
+function randomPart(list){
 
-
-/* =================================
-   START BATTLE
-================================= */
-
-function startBattle(){
-
-  playerPoints=0;
-  cpuPoints=0;
-
-  playerStamina=100;
-  cpuStamina=100;
-
-  playerSpeed=0;
-  cpuSpeed=0;
-
-  playerSpin=0;
-  cpuSpin=0;
-
-  playerAngle=0;
-  cpuAngle=Math.PI;
-
-  attackCooldown=0;
-
-  running=true;
-
-  overlay.classList.add("hidden");
-
-  updateStats();
-
-  cancelAnimationFrame(animation);
-
-  animation=
-  requestAnimationFrame(loop);
+  return list[
+    Math.floor(
+      Math.random()*list.length
+    )
+  ];
 
 }
 
 
-/* =================================
-   LAUNCH
-================================= */
+/* ==================================
+   RANDOMIZE
+================================== */
 
-function launch(){
+function randomize(){
 
-  if(!running)return;
+  randomButton.disabled=true;
 
-  playerSpeed+=2.5;
+  previewTop.classList.add(
+    "randomizing"
+  );
 
-  if(playerSpeed>13)
-    playerSpeed=13;
 
-}
+  /*
+    Quick visual shuffle
+  */
 
+  let flashes=0;
 
-/* =================================
-   ATTACK
-================================= */
 
-function attack(){
+  const interval=
+  setInterval(()=>{
 
-  if(!running)return;
+    bladeName.textContent=
+      randomPart(blades).name;
 
-  if(attackCooldown>0)return;
+    ratchetName.textContent=
+      randomPart(ratchets).name;
 
-  attackCooldown=35;
+    bitName.textContent=
+      randomPart(bits).name;
 
-  playerSpeed+=5;
+    flashes++;
 
-  if(playerSpeed>17)
-    playerSpeed=17;
+    if(flashes>=12){
 
-}
+      clearInterval(interval);
 
-
-/* =================================
-   BRAKE
-================================= */
-
-function brake(){
-
-  if(!running)return;
-
-  playerSpeed*=.55;
-
-}
-
-
-/* =================================
-   CPU AI
-================================= */
-
-function cpuAI(){
-
-  if(!running)return;
-
-  cpuSpeed+=
-    .015+
-    Math.random()*.02;
-
-  if(cpuSpeed>14)
-    cpuSpeed=14;
-
-}
-
-
-/* =================================
-   LOOP
-================================= */
-
-function loop(){
-
-  if(!running)return;
-
-
-  cpuAI();
-
-
-  if(attackCooldown>0)
-    attackCooldown--;
-
-
-  /* SPIN */
-
-  playerSpin+=
-    .05+
-    playerSpeed*.018;
-
-  cpuSpin+=
-    .045+
-    cpuSpeed*.017;
-
-
-  /* ORBIT */
-
-  playerAngle+=
-    .008+
-    playerSpeed*.0015;
-
-  cpuAngle-=
-    .007+
-    cpuSpeed*.0014;
-
-
-  /* STAMINA LOSS */
-
-  playerStamina-=
-    .004+
-    playerSpeed*.001;
-
-  cpuStamina-=
-    .004+
-    cpuSpeed*.001;
-
-
-  if(playerStamina<0)
-    playerStamina=0;
-
-  if(cpuStamina<0)
-    cpuStamina=0;
-
-
-  /* POSITION */
-
-  positionTops();
-
-
-  /* COLLISION */
-
-  checkCollision();
-
-
-  /* STAMINA KO */
-
-  if(playerStamina<=0){
-
-    endRound("cpu");
-
-    return;
-
-  }
-
-
-  if(cpuStamina<=0){
-
-    endRound("player");
-
-    return;
-
-  }
-
-
-  /* RAIL BOOST */
-
-  if(
-    Math.abs(
-      Math.sin(playerAngle*3)
-    )>.97
-  ){
-
-    playerSpeed+=.03;
-
-  }
-
-
-  if(
-    Math.abs(
-      Math.sin(cpuAngle*3)
-    )>.97
-  ){
-
-    cpuSpeed+=.025;
-
-  }
-
-
-  playerSpeed*=.998;
-  cpuSpeed*=.998;
-
-
-  updateStats();
-
-
-  animation=
-  requestAnimationFrame(loop);
-
-}
-
-
-/* =================================
-   POSITION TOPS
-================================= */
-
-function positionTops(){
-
-  const rect=
-    arena.getBoundingClientRect();
-
-  const cx=
-    rect.width/2;
-
-  const cy=
-    rect.height/2;
-
-
-  const pX=
-    cx+
-    Math.cos(playerAngle)
-    *playerRadius;
-
-  const pY=
-    cy+
-    Math.sin(playerAngle)
-    *playerRadius*.62;
-
-
-  const cX=
-    cx+
-    Math.cos(cpuAngle)
-    *cpuRadius;
-
-  const cY=
-    cy+
-    Math.sin(cpuAngle)
-    *cpuRadius*.62;
-
-
-  playerTop.style.left=
-    pX+"px";
-
-  playerTop.style.top=
-    pY+"px";
-
-  cpuTop.style.left=
-    cX+"px";
-
-  cpuTop.style.top=
-    cY+"px";
-
-
-  playerTop.style.transform=
-    `translate(-50%,-50%)
-     rotate(${playerSpin}rad)`;
-
-
-  cpuTop.style.transform=
-    `translate(-50%,-50%)
-     rotate(${cpuSpin}rad)`;
-
-}
-
-
-/* =================================
-   COLLISION
-================================= */
-
-function checkCollision(){
-
-  const dx=
-    Math.cos(playerAngle)
-    *playerRadius -
-    Math.cos(cpuAngle)
-    *cpuRadius;
-
-
-  const dy=
-    Math.sin(playerAngle)
-    *playerRadius*.62 -
-    Math.sin(cpuAngle)
-    *cpuRadius*.62;
-
-
-  const distance=
-    Math.sqrt(
-      dx*dx+
-      dy*dy
-    );
-
-
-  if(distance<72){
-
-    const impact=
-      Math.abs(
-        playerSpeed-
-        cpuSpeed
-      )+.5;
-
-
-    /* PLAYER ATTACK ADVANTAGE */
-
-    if(playerSpeed>cpuSpeed){
-
-      cpuStamina-=
-        impact*.8;
-
-      playerSpeed+=
-        .7;
-
-      createImpact();
-
-    }else{
-
-      playerStamina-=
-        impact*.55;
-
-      cpuSpeed+=
-        .5;
-
-      createImpact();
+      finishRandom();
 
     }
 
-
-    /* KNOCKBACK */
-
-    playerAngle+=
-      (Math.random()-.5)*.3;
-
-    cpuAngle+=
-      (Math.random()-.5)*.3;
-
-  }
+  },90);
 
 }
 
 
-/* =================================
-   IMPACT EFFECT
-================================= */
+/* ==================================
+   FINISH RANDOMIZER
+================================== */
 
-function createImpact(){
+function finishRandom(){
 
-  const rect=
-    arena.getBoundingClientRect();
+  const blade=
+    randomPart(blades);
 
-  const effect=
-    document.createElement("div");
+  const ratchet=
+    randomPart(ratchets);
 
-  effect.className="hit";
+  const bit=
+    randomPart(bits);
 
-  effect.style.left=
-    rect.width/2+"px";
 
-  effect.style.top=
-    rect.height/2+"px";
+  /* DISPLAY */
 
-  arena.appendChild(effect);
+  bladeName.textContent=
+    blade.name;
 
-  setTimeout(
-    ()=>effect.remove(),
-    500
+  ratchetName.textContent=
+    ratchet.name;
+
+  bitName.textContent=
+    bit.name;
+
+
+  /* CALCULATE STATS */
+
+  const attack=
+    blade.attack+
+    ratchet.attack+
+    bit.attack;
+
+  const defense=
+    blade.defense+
+    ratchet.defense+
+    bit.defense;
+
+  const stamina=
+    blade.stamina+
+    ratchet.stamina+
+    bit.stamina;
+
+
+  attackStat.textContent=
+    attack+"/30";
+
+  defenseStat.textContent=
+    defense+"/30";
+
+  staminaStat.textContent=
+    stamina+"/30";
+
+
+  previewTop.classList.remove(
+    "randomizing"
   );
 
 
-  for(let i=0;i<8;i++){
-
-    const spark=
-      document.createElement("div");
-
-    spark.className="spark";
-
-    spark.style.left=
-      rect.width/2+"px";
-
-    spark.style.top=
-      rect.height/2+"px";
+  randomButton.disabled=false;
 
 
-    spark.style.setProperty(
-      "--x",
-      (Math.random()*180-90)+"px"
-    );
-
-    spark.style.setProperty(
-      "--y",
-      (Math.random()*180-90)+"px"
-    );
-
-
-    arena.appendChild(spark);
-
-    setTimeout(
-      ()=>spark.remove(),
-      600
-    );
-
-  }
-
-}
-
-
-/* =================================
-   END ROUND
-================================= */
-
-function endRound(winner){
-
-  running=false;
-
-  cancelAnimationFrame(animation);
-
-
-  if(winner==="player"){
-
-    playerPoints++;
-
-  }else{
-
-    cpuPoints++;
-
-  }
-
-
-  updateStats();
-
-
-  if(playerPoints>=3){
-
-    wins++;
-
-    localStorage.setItem(
-      "spinClashWins",
-      wins
-    );
-
-    showResult(
-      "🏆 YOU WIN!",
-      "Xtreme finish!"
-    );
-
-    return;
-
-  }
-
-
-  if(cpuPoints>=3){
-
-    showResult(
-      "💥 CPU WINS!",
-      "Your top was knocked out."
-    );
-
-    return;
-
-  }
-
-
-  setTimeout(
-    startRound,
-    900
+  saveCombo(
+    blade,
+    ratchet,
+    bit,
+    attack,
+    defense,
+    stamina
   );
 
 }
 
 
-/* =================================
-   NEW ROUND
-================================= */
+/* ==================================
+   SAVE COMBO
+================================== */
 
-function startRound(){
-
-  playerStamina=100;
-  cpuStamina=100;
-
-  playerSpeed=0;
-  cpuSpeed=0;
-
-  playerAngle=
-    Math.random()*Math.PI*2;
-
-  cpuAngle=
-    playerAngle+Math.PI;
-
-  running=true;
-
-  animation=
-    requestAnimationFrame(loop);
-
-}
-
-
-/* =================================
-   RESULT
-================================= */
-
-function showResult(
-  title,
-  message
+function saveCombo(
+  blade,
+  ratchet,
+  bit,
+  attack,
+  defense,
+  stamina
 ){
 
-  overlay.innerHTML=`
+  const combo={
 
-    <div class="panel">
+    blade:blade.name,
 
-      <h2>
-        ${title}
-      </h2>
+    ratchet:ratchet.name,
 
-      <p>
-        ${message}
+    bit:bit.name,
 
-        <br><br>
+    attack,
+    defense,
+    stamina
 
-        You:
-        ${playerPoints}
-
-        —
-
-        CPU:
-        ${cpuPoints}
-
-        <br><br>
-
-        Total Wins:
-        ${wins}
-      </p>
-
-      <button
-        id="again"
-        class="mainButton"
-      >
-        BATTLE AGAIN
-      </button>
-
-    </div>
-
-  `;
-
-  overlay.classList.remove("hidden");
+  };
 
 
-  document
-    .getElementById("again")
-    .onclick=startBattle;
+  let combos=
+    JSON.parse(
+      localStorage.getItem(
+        "spinClashCombos"
+      )
+    ) || [];
+
+
+  combos.unshift(combo);
+
+
+  /*
+    Keep the latest 30 combos
+  */
+
+  combos=
+    combos.slice(0,30);
+
+
+  localStorage.setItem(
+    "spinClashCombos",
+    JSON.stringify(combos)
+  );
+
+
+  renderHistory();
 
 }
 
 
-/* =================================
-   STATS
-================================= */
+/* ==================================
+   HISTORY
+================================== */
 
-function updateStats(){
+function renderHistory(){
 
-  playerPointsText.textContent=
-    playerPoints;
-
-  cpuPointsText.textContent=
-    cpuPoints;
-
-  speedText.textContent=
-    Math.round(playerSpeed*10);
-
-  staminaText.textContent=
-    Math.round(playerStamina);
-
-}
+  let combos=
+    JSON.parse(
+      localStorage.getItem(
+        "spinClashCombos"
+      )
+    ) || [];
 
 
-/* =================================
-   CONTROLS
-================================= */
-
-document
-  .getElementById("launch")
-  .onclick=launch;
-
-document
-  .getElementById("attack")
-  .onclick=attack;
-
-document
-  .getElementById("brake")
-  .onclick=brake;
+  history.innerHTML="";
 
 
-startButton.onclick=
-  startBattle;
+  if(combos.length===0){
 
+    history.innerHTML=`
+      <div class="historyItem">
+        No combos yet.
+        Press RANDOMIZE!
+      </div>
+    `;
 
-/* =================================
-   KEYBOARD
-================================= */
-
-document.addEventListener(
-  "keydown",
-  e=>{
-
-    if(e.code==="Space"){
-      e.preventDefault();
-      launch();
-    }
-
-    if(
-      e.key==="a" ||
-      e.key==="A"
-    ){
-      attack();
-    }
-
-    if(
-      e.key==="s" ||
-      e.key==="S"
-    ){
-      brake();
-    }
+    return;
 
   }
-);
 
 
-/* =================================
-   INITIAL
-================================= */
+  combos.forEach(
+    (combo,index)=>{
 
-updateStats();
+      const item=
+        document.createElement("div");
+
+      item.className=
+        "historyItem";
+
+      item.innerHTML=`
+
+        <strong>
+          #${index+1}
+        </strong>
+
+        <br><br>
+
+        ⚔️ ${combo.blade}
+
+        <br>
+
+        ⚙️ ${combo.ratchet}
+
+        <br>
+
+        🔻 ${combo.bit}
+
+        <br><br>
+
+        ⚡ ${combo.attack}
+
+        &nbsp;
+
+        🛡️ ${combo.defense}
+
+        &nbsp;
+
+        🌀 ${combo.stamina}
+
+      `;
+
+      history.appendChild(item);
+
+    }
+  );
+
+}
+
+
+/* ==================================
+   CLEAR HISTORY
+================================== */
+
+clearButton.onclick=()=>{
+
+  localStorage.removeItem(
+    "spinClashCombos"
+  );
+
+  renderHistory();
+
+};
+
+
+/* ==================================
+   BUTTON
+================================== */
+
+randomButton.onclick=
+  randomize;
+
+
+/* ==================================
+   LOAD
+================================== */
+
+renderHistory();
 
 </script>
 
