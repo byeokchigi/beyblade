@@ -1,1 +1,1376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Spin Clash X</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  min-height:100%;
+  overflow:hidden;
+  font-family:system-ui,sans-serif;
+  background:
+    radial-gradient(circle at top,#263b62,#070b14 65%);
+  color:white;
+}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.game{
+  width:min(950px,100vw);
+  padding:10px;
+  text-align:center;
+}
+
+h1{
+  margin:0;
+
+  font-size:
+    clamp(28px,7vw,55px);
+
+  font-weight:1000;
+
+  background:
+    linear-gradient(
+      90deg,
+      #55d9ff,
+      white,
+      #ff5353
+    );
+
+  color:transparent;
+  background-clip:text;
+}
+
+.subtitle{
+  margin:0 0 8px;
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.stats{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+
+.stat{
+  padding:7px 14px;
+  border-radius:999px;
+  background:#ffffff12;
+  border:1px solid #ffffff30;
+  font-weight:900;
+}
+
+#arena{
+  position:relative;
+
+  width:100%;
+
+  height:min(70vh,650px);
+
+  min-height:430px;
+
+  overflow:hidden;
+
+  border-radius:30px;
+
+  border:3px solid #ffffff44;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #273958,
+      #111a2b 55%,
+      #070b13
+    );
+
+  box-shadow:
+    0 0 40px #000b,
+    inset 0 0 60px #000b;
+}
+
+/* =========================
+   ARENA RAIL
+========================= */
+
+.rail{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:94%;
+  height:20px;
+
+  transform:
+    translate(-50%,-50%)
+    rotate(-7deg);
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #55d9ff,
+      white,
+      #ff5555,
+      transparent
+    );
+
+  box-shadow:
+    0 0 15px #55d9ff88,
+    0 0 30px #ff555555;
+
+  opacity:.7;
+}
+
+.rail2{
+  transform:
+    translate(-50%,-50%)
+    rotate(83deg);
+
+  opacity:.18;
+}
+
+/* =========================
+   CENTER
+========================= */
+
+.center{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:130px;
+  height:130px;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  border:2px solid #ffffff33;
+
+  box-shadow:
+    inset 0 0 30px #0009,
+    0 0 20px #ffffff12;
+}
+
+/* =========================
+   TOPS
+========================= */
+
+.top{
+  position:absolute;
+
+  width:76px;
+  height:76px;
+
+  border-radius:50%;
+
+  border:5px solid white;
+
+  transform:
+    translate(-50%,-50%);
+
+  box-shadow:
+    0 0 15px #fff7,
+    inset 0 0 12px #0008;
+
+  z-index:5;
+}
+
+.top::before{
+  content:"";
+
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  width:22px;
+  height:22px;
+
+  transform:translate(-50%,-50%);
+
+  border-radius:50%;
+
+  background:#111;
+
+  border:4px solid white;
+
+  box-shadow:
+    0 0 10px #fff;
+}
+
+.top::after{
+  content:"";
+
+  position:absolute;
+
+  inset:7px;
+
+  border-radius:50%;
+
+  border:
+    3px dashed #ffffffaa;
+
+  animation:
+    spin .15s linear infinite;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+#playerTop{
+  background:
+    conic-gradient(
+      #45d9ff,
+      #1260ff,
+      #ffffff,
+      #45d9ff
+    );
+}
+
+#cpuTop{
+  background:
+    conic-gradient(
+      #ff4d55,
+      #9c1020,
+      #ffffff,
+      #ff4d55
+    );
+}
+
+/* =========================
+   EFFECTS
+========================= */
+
+.hit{
+  position:absolute;
+
+  width:80px;
+  height:80px;
+
+  border-radius:50%;
+
+  border:5px solid white;
+
+  pointer-events:none;
+
+  animation:
+    explosion .45s ease-out forwards;
+
+  z-index:10;
+}
+
+@keyframes explosion{
+
+  from{
+    opacity:1;
+    transform:scale(.2);
+  }
+
+  to{
+    opacity:0;
+    transform:scale(2.5);
+  }
+}
+
+.spark{
+  position:absolute;
+
+  width:7px;
+  height:7px;
+
+  border-radius:50%;
+
+  background:white;
+
+  pointer-events:none;
+
+  animation:
+    spark .5s ease-out forwards;
+}
+
+@keyframes spark{
+
+  from{
+    opacity:1;
+    transform:translate(0,0) scale(1);
+  }
+
+  to{
+    opacity:0;
+    transform:
+      translate(
+        var(--x),
+        var(--y)
+      )
+      scale(.1);
+  }
+}
+
+/* =========================
+   LAUNCH SCREEN
+========================= */
+
+#overlay{
+  position:absolute;
+
+  inset:0;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  background:#050812dd;
+
+  z-index:50;
+}
+
+.panel{
+  width:min(500px,90%);
+
+  padding:25px;
+
+  border-radius:25px;
+
+  background:#ffffff0d;
+
+  border:1px solid #ffffff30;
+
+  backdrop-filter:blur(10px);
+
+  box-shadow:
+    0 20px 50px #0009;
+}
+
+.panel h2{
+  margin:0 0 8px;
+
+  font-size:34px;
+}
+
+.panel p{
+  line-height:1.6;
+}
+
+.mainButton{
+  border:0;
+
+  padding:14px 30px;
+
+  border-radius:999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #168cff,
+      #ef3947
+    );
+
+  color:white;
+
+  font-size:18px;
+
+  font-weight:1000;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 0 25px #168cff55;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.controls{
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap:8px;
+
+  width:min(500px,100%);
+
+  margin:10px auto 0;
+}
+
+.control{
+  min-height:50px;
+
+  border:0;
+
+  border-radius:15px;
+
+  background:#ffffff15;
+
+  border:1px solid #ffffff30;
+
+  color:white;
+
+  font-weight:1000;
+
+  font-size:15px;
+
+  cursor:pointer;
+}
+
+.control:active{
+  transform:scale(.94);
+  background:#ffffff30;
+}
+
+#launch{
+  background:
+    linear-gradient(
+      90deg,
+      #168cff,
+      #2cc7ff
+    );
+}
+
+#attack{
+  background:
+    linear-gradient(
+      90deg,
+      #e8283e,
+      #ff6a3d
+    );
+}
+
+#brake{
+  background:
+    linear-gradient(
+      90deg,
+      #4c4c59,
+      #777786
+    );
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+  #arena{
+    height:65vh;
+    min-height:390px;
+  }
+
+  .top{
+    margin-bottom:2px;
+  }
+
+  .top h1{
+    font-size:34px;
+  }
+
+  .top .subtitle{
+    font-size:12px;
+  }
+
+  .top{
+    width:58px;
+    height:58px;
+  }
+
+  .controls{
+    gap:6px;
+  }
+
+  .control{
+    min-height:54px;
+    font-size:13px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>SPIN CLASH X</h1>
+
+<p class="subtitle">
+HIGH SPEED BATTLE ⚡
+</p>
+
+<div class="stats">
+
+<div class="stat">
+YOU: <span id="playerPoints">0</span>
+</div>
+
+<div class="stat">
+CPU: <span id="cpuPoints">0</span>
+</div>
+
+<div class="stat">
+SPEED: <span id="speedText">0</span>
+</div>
+
+<div class="stat">
+STAMINA: <span id="staminaText">100</span>%
+</div>
+
+</div>
+
+
+<div id="arena">
+
+<div class="rail"></div>
+<div class="rail rail2"></div>
+
+<div class="center"></div>
+
+
+<div
+  id="playerTop"
+  class="top"
+></div>
+
+
+<div
+  id="cpuTop"
+  class="top"
+></div>
+
+
+<div id="overlay">
+
+<div class="panel">
+
+<h2>
+⚡ SPIN CLASH X
+</h2>
+
+<p>
+
+Launch your top and battle the CPU!
+
+<br><br>
+
+⚡ <b>LAUNCH</b> to start spinning<br>
+💥 <b>ATTACK</b> to ram the opponent<br>
+🛑 <b>BRAKE</b> to reduce speed
+
+<br><br>
+
+First to <b>3 points</b> wins!
+
+</p>
+
+<button
+  id="startButton"
+  class="mainButton"
+>
+START BATTLE
+</button>
+
+</div>
+
+</div>
+
+
+</div>
+
+
+<div class="controls">
+
+<button
+  id="launch"
+  class="control"
+>
+🚀 LAUNCH
+</button>
+
+<button
+  id="attack"
+  class="control"
+>
+💥 ATTACK
+</button>
+
+<button
+  id="brake"
+  class="control"
+>
+🛑 BRAKE
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =================================
+   ELEMENTS
+================================= */
+
+const arena =
+document.getElementById("arena");
+
+const playerTop =
+document.getElementById("playerTop");
+
+const cpuTop =
+document.getElementById("cpuTop");
+
+const overlay =
+document.getElementById("overlay");
+
+const startButton =
+document.getElementById("startButton");
+
+const playerPointsText =
+document.getElementById("playerPoints");
+
+const cpuPointsText =
+document.getElementById("cpuPoints");
+
+const speedText =
+document.getElementById("speedText");
+
+const staminaText =
+document.getElementById("staminaText");
+
+
+/* =================================
+   GAME VARIABLES
+================================= */
+
+let running=false;
+
+let playerPoints=0;
+let cpuPoints=0;
+
+let playerStamina=100;
+let cpuStamina=100;
+
+let playerSpeed=0;
+let cpuSpeed=0;
+
+let playerAngle=0;
+let cpuAngle=Math.PI;
+
+let playerRadius=120;
+let cpuRadius=120;
+
+let playerSpin=0;
+let cpuSpin=0;
+
+let attackCooldown=0;
+
+let animation;
+
+
+/* =================================
+   HIGH SCORE
+================================= */
+
+let wins=
+Number(
+  localStorage.getItem("spinClashWins")
+)||0;
+
+
+/* =================================
+   START BATTLE
+================================= */
+
+function startBattle(){
+
+  playerPoints=0;
+  cpuPoints=0;
+
+  playerStamina=100;
+  cpuStamina=100;
+
+  playerSpeed=0;
+  cpuSpeed=0;
+
+  playerSpin=0;
+  cpuSpin=0;
+
+  playerAngle=0;
+  cpuAngle=Math.PI;
+
+  attackCooldown=0;
+
+  running=true;
+
+  overlay.classList.add("hidden");
+
+  updateStats();
+
+  cancelAnimationFrame(animation);
+
+  animation=
+  requestAnimationFrame(loop);
+
+}
+
+
+/* =================================
+   LAUNCH
+================================= */
+
+function launch(){
+
+  if(!running)return;
+
+  playerSpeed+=2.5;
+
+  if(playerSpeed>13)
+    playerSpeed=13;
+
+}
+
+
+/* =================================
+   ATTACK
+================================= */
+
+function attack(){
+
+  if(!running)return;
+
+  if(attackCooldown>0)return;
+
+  attackCooldown=35;
+
+  playerSpeed+=5;
+
+  if(playerSpeed>17)
+    playerSpeed=17;
+
+}
+
+
+/* =================================
+   BRAKE
+================================= */
+
+function brake(){
+
+  if(!running)return;
+
+  playerSpeed*=.55;
+
+}
+
+
+/* =================================
+   CPU AI
+================================= */
+
+function cpuAI(){
+
+  if(!running)return;
+
+  cpuSpeed+=
+    .015+
+    Math.random()*.02;
+
+  if(cpuSpeed>14)
+    cpuSpeed=14;
+
+}
+
+
+/* =================================
+   LOOP
+================================= */
+
+function loop(){
+
+  if(!running)return;
+
+
+  cpuAI();
+
+
+  if(attackCooldown>0)
+    attackCooldown--;
+
+
+  /* SPIN */
+
+  playerSpin+=
+    .05+
+    playerSpeed*.018;
+
+  cpuSpin+=
+    .045+
+    cpuSpeed*.017;
+
+
+  /* ORBIT */
+
+  playerAngle+=
+    .008+
+    playerSpeed*.0015;
+
+  cpuAngle-=
+    .007+
+    cpuSpeed*.0014;
+
+
+  /* STAMINA LOSS */
+
+  playerStamina-=
+    .004+
+    playerSpeed*.001;
+
+  cpuStamina-=
+    .004+
+    cpuSpeed*.001;
+
+
+  if(playerStamina<0)
+    playerStamina=0;
+
+  if(cpuStamina<0)
+    cpuStamina=0;
+
+
+  /* POSITION */
+
+  positionTops();
+
+
+  /* COLLISION */
+
+  checkCollision();
+
+
+  /* STAMINA KO */
+
+  if(playerStamina<=0){
+
+    endRound("cpu");
+
+    return;
+
+  }
+
+
+  if(cpuStamina<=0){
+
+    endRound("player");
+
+    return;
+
+  }
+
+
+  /* RAIL BOOST */
+
+  if(
+    Math.abs(
+      Math.sin(playerAngle*3)
+    )>.97
+  ){
+
+    playerSpeed+=.03;
+
+  }
+
+
+  if(
+    Math.abs(
+      Math.sin(cpuAngle*3)
+    )>.97
+  ){
+
+    cpuSpeed+=.025;
+
+  }
+
+
+  playerSpeed*=.998;
+  cpuSpeed*=.998;
+
+
+  updateStats();
+
+
+  animation=
+  requestAnimationFrame(loop);
+
+}
+
+
+/* =================================
+   POSITION TOPS
+================================= */
+
+function positionTops(){
+
+  const rect=
+    arena.getBoundingClientRect();
+
+  const cx=
+    rect.width/2;
+
+  const cy=
+    rect.height/2;
+
+
+  const pX=
+    cx+
+    Math.cos(playerAngle)
+    *playerRadius;
+
+  const pY=
+    cy+
+    Math.sin(playerAngle)
+    *playerRadius*.62;
+
+
+  const cX=
+    cx+
+    Math.cos(cpuAngle)
+    *cpuRadius;
+
+  const cY=
+    cy+
+    Math.sin(cpuAngle)
+    *cpuRadius*.62;
+
+
+  playerTop.style.left=
+    pX+"px";
+
+  playerTop.style.top=
+    pY+"px";
+
+  cpuTop.style.left=
+    cX+"px";
+
+  cpuTop.style.top=
+    cY+"px";
+
+
+  playerTop.style.transform=
+    `translate(-50%,-50%)
+     rotate(${playerSpin}rad)`;
+
+
+  cpuTop.style.transform=
+    `translate(-50%,-50%)
+     rotate(${cpuSpin}rad)`;
+
+}
+
+
+/* =================================
+   COLLISION
+================================= */
+
+function checkCollision(){
+
+  const dx=
+    Math.cos(playerAngle)
+    *playerRadius -
+    Math.cos(cpuAngle)
+    *cpuRadius;
+
+
+  const dy=
+    Math.sin(playerAngle)
+    *playerRadius*.62 -
+    Math.sin(cpuAngle)
+    *cpuRadius*.62;
+
+
+  const distance=
+    Math.sqrt(
+      dx*dx+
+      dy*dy
+    );
+
+
+  if(distance<72){
+
+    const impact=
+      Math.abs(
+        playerSpeed-
+        cpuSpeed
+      )+.5;
+
+
+    /* PLAYER ATTACK ADVANTAGE */
+
+    if(playerSpeed>cpuSpeed){
+
+      cpuStamina-=
+        impact*.8;
+
+      playerSpeed+=
+        .7;
+
+      createImpact();
+
+    }else{
+
+      playerStamina-=
+        impact*.55;
+
+      cpuSpeed+=
+        .5;
+
+      createImpact();
+
+    }
+
+
+    /* KNOCKBACK */
+
+    playerAngle+=
+      (Math.random()-.5)*.3;
+
+    cpuAngle+=
+      (Math.random()-.5)*.3;
+
+  }
+
+}
+
+
+/* =================================
+   IMPACT EFFECT
+================================= */
+
+function createImpact(){
+
+  const rect=
+    arena.getBoundingClientRect();
+
+  const effect=
+    document.createElement("div");
+
+  effect.className="hit";
+
+  effect.style.left=
+    rect.width/2+"px";
+
+  effect.style.top=
+    rect.height/2+"px";
+
+  arena.appendChild(effect);
+
+  setTimeout(
+    ()=>effect.remove(),
+    500
+  );
+
+
+  for(let i=0;i<8;i++){
+
+    const spark=
+      document.createElement("div");
+
+    spark.className="spark";
+
+    spark.style.left=
+      rect.width/2+"px";
+
+    spark.style.top=
+      rect.height/2+"px";
+
+
+    spark.style.setProperty(
+      "--x",
+      (Math.random()*180-90)+"px"
+    );
+
+    spark.style.setProperty(
+      "--y",
+      (Math.random()*180-90)+"px"
+    );
+
+
+    arena.appendChild(spark);
+
+    setTimeout(
+      ()=>spark.remove(),
+      600
+    );
+
+  }
+
+}
+
+
+/* =================================
+   END ROUND
+================================= */
+
+function endRound(winner){
+
+  running=false;
+
+  cancelAnimationFrame(animation);
+
+
+  if(winner==="player"){
+
+    playerPoints++;
+
+  }else{
+
+    cpuPoints++;
+
+  }
+
+
+  updateStats();
+
+
+  if(playerPoints>=3){
+
+    wins++;
+
+    localStorage.setItem(
+      "spinClashWins",
+      wins
+    );
+
+    showResult(
+      "🏆 YOU WIN!",
+      "Xtreme finish!"
+    );
+
+    return;
+
+  }
+
+
+  if(cpuPoints>=3){
+
+    showResult(
+      "💥 CPU WINS!",
+      "Your top was knocked out."
+    );
+
+    return;
+
+  }
+
+
+  setTimeout(
+    startRound,
+    900
+  );
+
+}
+
+
+/* =================================
+   NEW ROUND
+================================= */
+
+function startRound(){
+
+  playerStamina=100;
+  cpuStamina=100;
+
+  playerSpeed=0;
+  cpuSpeed=0;
+
+  playerAngle=
+    Math.random()*Math.PI*2;
+
+  cpuAngle=
+    playerAngle+Math.PI;
+
+  running=true;
+
+  animation=
+    requestAnimationFrame(loop);
+
+}
+
+
+/* =================================
+   RESULT
+================================= */
+
+function showResult(
+  title,
+  message
+){
+
+  overlay.innerHTML=`
+
+    <div class="panel">
+
+      <h2>
+        ${title}
+      </h2>
+
+      <p>
+        ${message}
+
+        <br><br>
+
+        You:
+        ${playerPoints}
+
+        —
+
+        CPU:
+        ${cpuPoints}
+
+        <br><br>
+
+        Total Wins:
+        ${wins}
+      </p>
+
+      <button
+        id="again"
+        class="mainButton"
+      >
+        BATTLE AGAIN
+      </button>
+
+    </div>
+
+  `;
+
+  overlay.classList.remove("hidden");
+
+
+  document
+    .getElementById("again")
+    .onclick=startBattle;
+
+}
+
+
+/* =================================
+   STATS
+================================= */
+
+function updateStats(){
+
+  playerPointsText.textContent=
+    playerPoints;
+
+  cpuPointsText.textContent=
+    cpuPoints;
+
+  speedText.textContent=
+    Math.round(playerSpeed*10);
+
+  staminaText.textContent=
+    Math.round(playerStamina);
+
+}
+
+
+/* =================================
+   CONTROLS
+================================= */
+
+document
+  .getElementById("launch")
+  .onclick=launch;
+
+document
+  .getElementById("attack")
+  .onclick=attack;
+
+document
+  .getElementById("brake")
+  .onclick=brake;
+
+
+startButton.onclick=
+  startBattle;
+
+
+/* =================================
+   KEYBOARD
+================================= */
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.code==="Space"){
+      e.preventDefault();
+      launch();
+    }
+
+    if(
+      e.key==="a" ||
+      e.key==="A"
+    ){
+      attack();
+    }
+
+    if(
+      e.key==="s" ||
+      e.key==="S"
+    ){
+      brake();
+    }
+
+  }
+);
+
+
+/* =================================
+   INITIAL
+================================= */
+
+updateStats();
+
+</script>
+
+</body>
+</html>
