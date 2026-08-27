@@ -1486,6 +1486,721 @@ function renderHistory(){
         <br>
 
         Press RANDOMIZE!
+<script>
+
+/* =====================================================
+   BLADE DATABASE
+===================================================== */
+
+const blades = [
+
+  {name:"Sol Eclipse",cx:true,attack:9,defense:6,stamina:7},
+
+  {name:"Impact Drake",cx:false,attack:9,defense:5,stamina:6},
+
+  {name:"Tyranno Roar",cx:false,attack:10,defense:4,stamina:5},
+
+  /* CLOCK MIRAGE:
+     Can ONLY use simple Ratchets
+  */
+  {
+    name:"Clock Mirage",
+    cx:false,
+    simpleRatchet:true,
+    attack:4,
+    defense:7,
+    stamina:9
+  },
+
+  {name:"Knight Fortress",cx:true,attack:3,defense:10,stamina:7},
+
+  {name:"Fox Brush",cx:true,attack:6,defense:7,stamina:8},
+
+  {name:"Tyranno Beat",cx:false,attack:8,defense:5,stamina:6},
+
+  {name:"Samurai Saber",cx:false,attack:8,defense:6,stamina:6},
+
+  {name:"Knight Mail",cx:false,attack:5,defense:9,stamina:6},
+
+  {name:"Dran Buster",cx:false,attack:10,defense:4,stamina:5},
+
+  {name:"Shark Gill",cx:false,attack:9,defense:4,stamina:6},
+
+  {name:"Whale Wave",cx:false,attack:5,defense:7,stamina:9},
+
+  {name:"Phoenix Wing",cx:false,attack:9,defense:6,stamina:7},
+
+  {name:"Emperor Might",cx:true,attack:7,defense:8,stamina:6},
+
+  {name:"Cobalt Dragoon",cx:false,attack:8,defense:5,stamina:8},
+
+  {name:"Silver Wolf",cx:false,attack:5,defense:6,stamina:9},
+
+  {name:"Dran Brave",cx:true,attack:8,defense:7,stamina:6},
+
+  {name:"Shark Edge",cx:false,attack:10,defense:3,stamina:5},
+
+  /* BULLET GRIFFON:
+     No Ratchet
+  */
+  {
+    name:"Bullet Griffon",
+    cx:false,
+    noRatchet:true,
+    attack:7,
+    defense:6,
+    stamina:7
+  },
+
+  {name:"Dran Sword",cx:false,attack:9,defense:3,stamina:4},
+
+  {name:"Meteor Dragoon",cx:false,attack:8,defense:5,stamina:8},
+
+  {name:"Wolf Hunt",cx:true,attack:6,defense:7,stamina:8},
+
+  {name:"Hells Hammer",cx:false,attack:7,defense:8,stamina:5},
+
+  {name:"Wizard Arc",cx:true,attack:5,defense:7,stamina:9},
+
+  {name:"Bahamut Blitz",cx:true,attack:8,defense:7,stamina:6},
+
+  {name:"Pegasus Blast",cx:true,attack:10,defense:4,stamina:6},
+
+  {name:"Golem Rock",cx:false,attack:5,defense:10,stamina:5},
+
+  {name:"Ragna Rage",cx:true,attack:9,defense:6,stamina:5},
+
+  {name:"Samurai Calibur",cx:false,attack:8,defense:7,stamina:6},
+
+  {name:"Wizard Arrow",cx:false,attack:4,defense:6,stamina:9},
+
+  {name:"Wizard Rod",cx:false,attack:3,defense:7,stamina:10},
+
+  {name:"Leon Claw",cx:false,attack:8,defense:7,stamina:4},
+
+  {name:"Leon Crest",cx:false,attack:6,defense:9,stamina:6},
+
+  {name:"Heavens Ring",cx:false,attack:4,defense:7,stamina:9},
+
+  /* GLORY VALKYRIE:
+     No Ratchet
+  */
+  {
+    name:"Glory Valkyrie",
+    cx:false,
+    noRatchet:true,
+    attack:9,
+    defense:5,
+    stamina:7
+  },
+
+  {name:"Ptera Wing",cx:false,attack:7,defense:5,stamina:8},
+
+  {name:"Knight Shield",cx:false,attack:3,defense:10,stamina:6},
+
+  {name:"Perseus Dark",cx:true,attack:7,defense:8,stamina:7},
+
+  {name:"Cerberus Dark",cx:true,attack:8,defense:7,stamina:6}
+
+];
+
+
+/* =====================================================
+   NORMAL RATCHETS
+===================================================== */
+
+const ratchets = [
+
+  {name:"0-60",attack:6,defense:7,stamina:6},
+
+  {name:"0-80",attack:4,defense:9,stamina:5},
+
+  {name:"1-50",attack:7,defense:5,stamina:7},
+
+  {name:"1-60",attack:6,defense:6,stamina:7},
+
+  {name:"2-60",attack:7,defense:5,stamina:7},
+
+  {name:"3-60",attack:7,defense:5,stamina:6},
+
+  {name:"3-70",attack:6,defense:7,stamina:6},
+
+  /* SIMPLE RATCHET */
+  {name:"4-55",simple:true,attack:7,defense:5,stamina:7},
+
+  {name:"4-60",attack:6,defense:6,stamina:6},
+
+  {name:"4-70",attack:5,defense:7,stamina:6},
+
+  {name:"5-60",attack:7,defense:6,stamina:5},
+
+  {name:"5-70",attack:5,defense:8,stamina:5},
+
+  {name:"5-80",attack:4,defense:9,stamina:4},
+
+  {name:"6-80",attack:4,defense:9,stamina:4},
+
+  /* SIMPLE RATCHET */
+  {name:"7-55",simple:true,attack:8,defense:5,stamina:6},
+
+  {name:"7-70",attack:5,defense:8,stamina:6},
+
+  {name:"9-60",attack:8,defense:4,stamina:5},
+
+  /* SIMPLE RATCHET */
+  {name:"9-65",simple:true,attack:7,defense:5,stamina:6}
+
+];
+
+
+/* =====================================================
+   SPECIAL RATCHETS
+   Tr / Op cause BIT = N/A
+===================================================== */
+
+const specialRatchets = [
+
+  {
+    name:"Tr",
+    special:true,
+    attack:6,
+    defense:6,
+    stamina:6
+  },
+
+  {
+    name:"Op",
+    special:true,
+    attack:6,
+    defense:6,
+    stamina:6
+  }
+
+];
+
+
+/* =====================================================
+   BITS
+===================================================== */
+
+const bits = [
+
+  {name:"Ball",attack:3,defense:8,stamina:9},
+
+  {name:"Free Ball",attack:3,defense:8,stamina:10},
+
+  {name:"Gear Flat",attack:10,defense:3,stamina:4},
+
+  {name:"Free Flat",attack:8,defense:4,stamina:6},
+
+  {name:"Disc Ball",attack:4,defense:8,stamina:8},
+
+  {name:"Yielding",attack:2,defense:8,stamina:10},
+
+  {name:"Point",attack:6,defense:5,stamina:8},
+
+  {name:"Gear Point",attack:7,defense:5,stamina:7},
+
+  {name:"Quake",attack:9,defense:3,stamina:4},
+
+  {name:"Kick",attack:8,defense:4,stamina:5},
+
+  {name:"Trans Kick",attack:9,defense:4,stamina:5},
+
+  {name:"Under Needle",attack:2,defense:10,stamina:7},
+
+  {name:"High Needle",attack:2,defense:9,stamina:7},
+
+  {name:"Taper",attack:7,defense:5,stamina:7},
+
+  {name:"Rush",attack:10,defense:2,stamina:3},
+
+  {name:"Low Rush",attack:9,defense:3,stamina:4},
+
+  {name:"Trans Point",attack:7,defense:5,stamina:7},
+
+  {name:"Wedge",attack:3,defense:9,stamina:7},
+
+  {name:"Hexa",attack:6,defense:7,stamina:6},
+
+  {name:"Level",attack:5,defense:7,stamina:7},
+
+  {name:"Ignition",attack:8,defense:4,stamina:5},
+
+  {name:"Cyclone",attack:9,defense:4,stamina:5},
+
+  {name:"Merge",attack:7,defense:6,stamina:6},
+
+  {name:"Jolt",attack:8,defense:5,stamina:5},
+
+  {name:"Elevate",attack:5,defense:8,stamina:6},
+
+  {name:"Low Orb",attack:4,defense:7,stamina:9},
+
+  {name:"Unite",attack:6,defense:7,stamina:8},
+
+  /* NEW BIT */
+  {name:"Bound Spike",attack:4,defense:9,stamina:7}
+
+];
+
+
+/* =====================================================
+   ASSIST BLADES
+===================================================== */
+
+const assistBlades = [
+
+  "Heavy",
+  "Wheel",
+  "Knuckle",
+  "Assault",
+  "Erase",
+  "Free",
+  "Jaggy",
+  "Slash",
+  "Round",
+  "Bumper",
+  "Vertical",
+  "Dual"
+
+];
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const bladeName =
+document.getElementById("bladeName");
+
+const assistPart =
+document.getElementById("assistPart");
+
+const assistName =
+document.getElementById("assistName");
+
+const ratchetName =
+document.getElementById("ratchetName");
+
+const bitName =
+document.getElementById("bitName");
+
+const attackStat =
+document.getElementById("attackStat");
+
+const defenseStat =
+document.getElementById("defenseStat");
+
+const staminaStat =
+document.getElementById("staminaStat");
+
+const previewTop =
+document.getElementById("previewTop");
+
+const randomButton =
+document.getElementById("randomButton");
+
+const history =
+document.getElementById("history");
+
+const clearButton =
+document.getElementById("clearButton");
+
+
+/* =====================================================
+   RANDOM PICK
+===================================================== */
+
+function randomPart(list){
+
+  return list[
+    Math.floor(
+      Math.random()*list.length
+    )
+  ];
+
+}
+
+
+/* =====================================================
+   RANDOMIZE
+===================================================== */
+
+function randomize(){
+
+  randomButton.disabled=true;
+
+  previewTop.classList.add(
+    "randomizing"
+  );
+
+  let flashes=0;
+
+  const interval=setInterval(()=>{
+
+    bladeName.textContent =
+      randomPart(blades).name;
+
+    ratchetName.textContent =
+      randomPart(
+        ratchets.concat(
+          specialRatchets
+        )
+      ).name;
+
+    bitName.textContent =
+      randomPart(bits).name;
+
+    flashes++;
+
+    if(flashes>=14){
+
+      clearInterval(interval);
+
+      finishRandom();
+
+    }
+
+  },85);
+
+}
+
+
+/* =====================================================
+   FINISH RANDOM
+===================================================== */
+
+function finishRandom(){
+
+  /*
+     FIRST choose Blade.
+     Blade determines special rules.
+  */
+
+  const blade =
+    randomPart(blades);
+
+
+  let ratchet;
+  let bit;
+  let assist=null;
+
+
+  /* =================================================
+     RULE 1
+     
+     Glory Valkyrie AND Bullet Griffon
+     have no Ratchet.
+  ================================================= */
+
+  if(blade.noRatchet){
+
+    ratchet = {
+
+      name:"N/A",
+
+      attack:0,
+      defense:0,
+      stamina:0
+
+    };
+
+  }
+
+
+  /* =================================================
+     RULE 2
+     
+     Clock Mirage can ONLY use:
+     4-55
+     7-55
+     9-65
+  ================================================= */
+
+  else if(blade.simpleRatchet){
+
+    const simpleRatchets =
+      ratchets.filter(
+        r => r.simple === true
+      );
+
+    ratchet =
+      randomPart(
+        simpleRatchets
+      );
+
+  }
+
+
+  /* =================================================
+     RULE 3
+     
+     Every other Blade can use
+     normal + special Ratchets.
+  ================================================= */
+
+  else{
+
+    ratchet =
+      randomPart(
+        ratchets.concat(
+          specialRatchets
+        )
+      );
+
+  }
+
+
+  /* =================================================
+     RULE 4
+     
+     Tr / Op = Bit N/A
+  ================================================= */
+
+  if(ratchet.special){
+
+    bit = {
+
+      name:"N/A",
+
+      attack:0,
+      defense:0,
+      stamina:0
+
+    };
+
+  }
+
+  else{
+
+    bit =
+      randomPart(bits);
+
+  }
+
+
+  /* =================================================
+     RULE 5
+     
+     CX Blade gets Assist Blade.
+  ================================================= */
+
+  if(blade.cx){
+
+    assist =
+      randomPart(
+        assistBlades
+      );
+
+  }
+
+
+  /* =================================================
+     DISPLAY BLADE
+  ================================================= */
+
+  bladeName.textContent =
+    blade.name +
+    (
+      blade.cx
+        ? " (CX)"
+        : ""
+    );
+
+
+  /* =================================================
+     DISPLAY ASSIST
+  ================================================= */
+
+  if(assist){
+
+    assistName.textContent =
+      assist;
+
+    assistPart.classList.add(
+      "show"
+    );
+
+  }
+
+  else{
+
+    assistName.textContent =
+      "N/A";
+
+    assistPart.classList.remove(
+      "show"
+    );
+
+  }
+
+
+  /* =================================================
+     DISPLAY RATCHET
+  ================================================= */
+
+  ratchetName.textContent =
+    ratchet.name;
+
+
+  /* =================================================
+     DISPLAY BIT
+  ================================================= */
+
+  bitName.textContent =
+    bit.name;
+
+
+  /* =================================================
+     STATS
+  ================================================= */
+
+  const attack =
+    blade.attack +
+    ratchet.attack +
+    bit.attack;
+
+
+  const defense =
+    blade.defense +
+    ratchet.defense +
+    bit.defense;
+
+
+  const stamina =
+    blade.stamina +
+    ratchet.stamina +
+    bit.stamina;
+
+
+  attackStat.textContent =
+    attack + "/30";
+
+  defenseStat.textContent =
+    defense + "/30";
+
+  staminaStat.textContent =
+    stamina + "/30";
+
+
+  /* =================================================
+     FINISH ANIMATION
+  ================================================= */
+
+  previewTop.classList.remove(
+    "randomizing"
+  );
+
+  randomButton.disabled=false;
+
+
+  /* =================================================
+     SAVE
+  ================================================= */
+
+  saveCombo(
+    blade,
+    assist,
+    ratchet,
+    bit,
+    attack,
+    defense,
+    stamina
+  );
+
+}
+
+
+/* =====================================================
+   SAVE COMBO
+===================================================== */
+
+function saveCombo(
+  blade,
+  assist,
+  ratchet,
+  bit,
+  attack,
+  defense,
+  stamina
+){
+
+  const combo = {
+
+    blade:blade.name,
+
+    cx:blade.cx,
+
+    assist:assist,
+
+    ratchet:ratchet.name,
+
+    bit:bit.name,
+
+    attack:attack,
+
+    defense:defense,
+
+    stamina:stamina
+
+  };
+
+
+  let combos =
+    JSON.parse(
+      localStorage.getItem(
+        "spinClashCombos"
+      )
+    ) || [];
+
+
+  combos.unshift(combo);
+
+
+  combos =
+    combos.slice(0,30);
+
+
+  localStorage.setItem(
+    "spinClashCombos",
+    JSON.stringify(combos)
+  );
+
+
+  renderHistory();
+
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+function renderHistory(){
+
+  let combos =
+    JSON.parse(
+      localStorage.getItem(
+        "spinClashCombos"
+      )
+    ) || [];
+
+
+  history.innerHTML="";
+
+
+  if(combos.length===0){
+
+    history.innerHTML=`
+
+      <div class="historyItem">
+
+        No combos yet.
+
+        <br>
+
+        Press RANDOMIZE!
 
       </div>
 
@@ -1499,58 +2214,60 @@ function renderHistory(){
   combos.forEach(
     (combo,index)=>{
 
-      const item=
-        document.createElement("div");
+      const item =
+        document.createElement(
+          "div"
+        );
 
 
-      item.className=
+      item.className =
         "historyItem";
 
 
-      const cx=
+      const cx =
         combo.cx
-        ? " <span class='cxText'>(CX)</span>"
-        : "";
+          ? " <span class='cxText'>(CX)</span>"
+          : "";
 
 
-      const assistHTML=
+      const assistHTML =
         combo.assist
-        ? `
-          <br>
-          🔩 ${combo.assist}
-        `
-        : "";
+          ? `
+            <br>
+            🔩 ${combo.assist}
+          `
+          : "";
 
 
-      const bitHTML=
+      const bitHTML =
         combo.bit==="N/A"
-        ? `
-          <br>
-          🔻 <span class="naText">
-          N/A
-          </span>
-        `
-        : `
-          <br>
-          🔻 ${combo.bit}
-        `;
+          ? `
+            <br>
+            🔻 <span class="naText">
+            N/A
+            </span>
+          `
+          : `
+            <br>
+            🔻 ${combo.bit}
+          `;
 
 
-      const ratchetHTML=
+      const ratchetHTML =
         combo.ratchet==="N/A"
-        ? `
-          <br>
-          ⚙️ <span class="naText">
-          N/A
-          </span>
-        `
-        : `
-          <br>
-          ⚙️ ${combo.ratchet}
-        `;
+          ? `
+            <br>
+            ⚙️ <span class="naText">
+            N/A
+            </span>
+          `
+          : `
+            <br>
+            ⚙️ ${combo.ratchet}
+          `;
 
 
-      item.innerHTML=`
+      item.innerHTML = `
 
         <strong>
           #${index+1}
@@ -1581,7 +2298,9 @@ function renderHistory(){
       `;
 
 
-      history.appendChild(item);
+      history.appendChild(
+        item
+      );
 
     }
   );
@@ -1590,10 +2309,10 @@ function renderHistory(){
 
 
 /* =====================================================
-   CLEAR
+   CLEAR HISTORY
 ===================================================== */
 
-clearButton.onclick=()=>{
+clearButton.onclick = () => {
 
   localStorage.removeItem(
     "spinClashCombos"
@@ -1605,20 +2324,20 @@ clearButton.onclick=()=>{
 
 
 /* =====================================================
-   BUTTON
+   RANDOMIZE BUTTON
 ===================================================== */
 
-randomButton.onclick=
+randomButton.onclick =
   randomize;
 
 
 /* =====================================================
-   INITIAL
+   INITIALIZE
 ===================================================== */
 
 renderHistory();
 
-</script>
+            </script>
 
 </body>
 </html>
